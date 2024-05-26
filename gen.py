@@ -153,6 +153,17 @@ def addDecorators(arr: list, prefix: str = "", suffix: str = "") -> list:
 
     return output
 
+def genPassports() -> list:
+    global amount
+    from random import randint
+
+    output = []
+
+    for i in range(amount):
+        output.append(f"{randint(1000, 9999)} {randint(100000, 999999)}")
+
+    return output
+
 def genPasswords(lowerLen: int, upperLen: int) -> list:
     global amount
     from string import ascii_letters, digits
@@ -167,7 +178,7 @@ def genPasswords(lowerLen: int, upperLen: int) -> list:
 
     return output
 
-def genManufacturers(prefixes: list, suffixes: list) -> list:
+def genManufacturers(prefixes: list = [], suffixes: list = [], limit: int = 255) -> list:
     global amount
     from random import randint
 
@@ -186,7 +197,8 @@ def genManufacturers(prefixes: list, suffixes: list) -> list:
         if slen > 0:
             s = suffixes[randint(0, slen)]
 
-        output.append(f"{p}{country}{name}{s}")
+        string = f"{p}{country}{name}{s}"
+        output.append(string[:limit])
     
     return output
 
@@ -244,7 +256,7 @@ def genEmails() -> list:
     
     return output
 
-def genAddresses() -> list:
+def genAddresses(limit: int = 255) -> list:
     global amount
     from random import randint
 
@@ -254,7 +266,8 @@ def genAddresses() -> list:
         house = randint(0, 99)
         city = cities[randint(0, citiesLen)]
         street = streets[randint(0, streetsLen)]
-        output.append(f"г. {city}, ул. {street}, д. {house}")
+        string = f"г. {city}, ул. {street}, д. {house}"
+        output.append(string[:limit])
     
     return output
 
@@ -290,6 +303,25 @@ def genPhoneNums() -> list:
 
     return output
 
+def genDateTimes() -> list:
+    times = genTimes()
+    dates = genDates()
+
+    times = addDecorators(times, " ")
+
+    return mergeLists(dates, times)
+
+def genTimes() -> list:
+    global amount
+    from random import randint
+
+    output = []
+
+    for i in range(amount):
+        output.append(f"{randint(0,23)}:{randint(0,59)}:{randint(0,59)}")
+
+    return output
+
 def genDates() -> list:
     global amount
     from random import randint
@@ -301,7 +333,7 @@ def genDates() -> list:
 
     return output
 
-def genFios() -> list:
+def genFios(limit: int = 255) -> list:
     global amount
     from random import randint
 
@@ -312,7 +344,8 @@ def genFios() -> list:
         name = names[gender][randint(0, namesLen[gender])]
         surname = surnames[gender][randint(0, surnamesLen[gender])]
         otch = otchs[gender][randint(0, otchsLen[gender])]
-        output.append(f"{surname} {name} {otch}")
+        string = f"{surname} {name} {otch}"
+        output.append(string[:limit])
 	
     return output
 

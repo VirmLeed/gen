@@ -50,6 +50,8 @@ def getInput(inputFileName: str, shuffleToAmount: bool = True) -> list:
         inlen = len(lines)-1
         for i in range(amount):
             output.append(lines[randint(0, inlen)])
+    else:
+        output = lines
 
     return output
 
@@ -109,8 +111,8 @@ def writeOutput(primary: list, *cols: list) -> str:
         if id % step == 0:
             print(f"{id // step}%/100%")
 
-    output.write("'" + "','".join([str(col[i]) for col in cols]) + "'")
-    txt.write("'" + str(primary[i]) + "'")
+    output.write("'" + "','".join([str(col[i+1]) for col in cols]) + "'")
+    txt.write("'" + str(primary[i+1]) + "'")
 
     output.close()
     txt.close()
@@ -150,6 +152,17 @@ def addDecorators(arr: list, prefix: str = "", suffix: str = "") -> list:
 
     for element in arr:
         output.append(prefix + str(element) + suffix)
+
+    return output
+
+def genGenericNumberedItems(itemName: str) -> list:
+    global amount
+    from random import randint
+
+    output = []
+
+    for i in range(amount):
+        output.append(f"{itemName} {i}")
 
     return output
 
@@ -243,7 +256,7 @@ def genCountries() -> list:
 
     return output
 
-def genEmails() -> list:
+def genEmails(limit: int = 255) -> list:
     global amount
     from random import randint
 
@@ -252,6 +265,7 @@ def genEmails() -> list:
     for i in range(amount):
         name = namesEn[randint(0, namesEnLen)]
         mail = mails[randint(0, mailsLen)]
+        name = name[:limit-len(mail)-1]
         output.append(f"{name}@{mail}")
     
     return output
@@ -289,23 +303,28 @@ def genIds() -> list:
 
     return output
 
-def genPhoneNums() -> list:
+def genPhoneNums(format: str = "+7 (XXX) XXX-XX-XX") -> list:
     global amount
     from random import randint
 
     output = []
 
-    for i in range(amount):
-        num = "+7"
-        for i in range(10):
-            num += str(randint(0, 9))
-        output.append(num)
+    if format:
+        for i in range(amount):
+            num = ""
+            for char in format:
+                if char == "X":
+                    num += str(randint(0, 9))
+                else:
+                    num += char
+
+            output.append(num)
 
     return output
 
-def genDateTimes() -> list:
+def genDateTimes(year1: int = 1950, year2: int = 2023) -> list:
     times = genTimes()
-    dates = genDates()
+    dates = genDates(year1, year2)
 
     times = addDecorators(times, " ")
 
@@ -322,14 +341,14 @@ def genTimes() -> list:
 
     return output
 
-def genDates() -> list:
+def genDates(year1: int = 1950, year2: int = 2023) -> list:
     global amount
     from random import randint
 
     output = []
 
     for i in range(amount):
-        output.append(f"{randint(2000,2023)}-{randint(1,12)}-{randint(1,28)}")
+        output.append(f"{randint(year1, year2)}-{randint(1,12)}-{randint(1,28)}")
 
     return output
 
@@ -350,5 +369,4 @@ def genFios(limit: int = 255) -> list:
     return output
 
 if __name__ == "__main__":
-    scales = mergeLists(addDecorators(genNums(1, 1), suffix=":"), genNums(1, 100))
-    print(scales)
+    print(genIds())

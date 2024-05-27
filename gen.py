@@ -369,4 +369,5 @@ def genFios(limit: int = 255) -> list:
     return output
 
 if __name__ == "__main__":
-    print(genIds())
+    amount = 1
+    print(genFios())
